@@ -8,6 +8,7 @@ open Shared
 
 type Storage() =
     let todos = ResizeArray<_>()
+    let blotters = ResizeArray<_>()
 
     member __.GetTodos() = List.ofSeq todos
 
@@ -17,6 +18,10 @@ type Storage() =
             Ok()
         else
             Error "Invalid todo"
+
+    member __.AddBlotter(data : Blotter) =
+        blotters.Add data
+        Ok()
 
 let storage = Storage()
 
@@ -55,3 +60,5 @@ let app =
     }
 
 run app
+
+
