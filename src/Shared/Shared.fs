@@ -4,6 +4,9 @@ open System
 
 type Todo = { Id: Guid; Description: string }
 
+type Blotter = { Id: Guid; TimeISO: DateTime; Price: float; Quantity: int; Pair: string }
+type Market = { Id: Guid; Provider: string; Pair: string; PricevsTime: Object;}
+
 module Todo =
     let isValid (description: string) =
         String.IsNullOrWhiteSpace description |> not
