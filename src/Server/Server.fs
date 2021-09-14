@@ -61,4 +61,12 @@ let app =
 
 run app
 
+let loadBlottersInfo() =
+    [ { Id = System.Guid();
+        DateTime = System.DateTime()
+        Price = 1.4528;
+        Quantity = 1500;
+        Pair = "GBP/USD" } ]
+
+
 
