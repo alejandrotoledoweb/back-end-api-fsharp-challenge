@@ -4,8 +4,18 @@ open System
 
 type Todo = { Id: Guid; Description: string }
 
-type Blotter = { Id: Guid; TimeISO: DateTime; Price: float; Quantity: int; Pair: string }
+type Blotter = { Id: Guid; DateTime: DateTime; Price: float; Quantity: int; Pair: string }
 type Market = { Id: Guid; Provider: string; Pair: string; PricevsTime: Object;}
+
+module Blotter =
+    // let isValidPrice (price: float) =
+    //     float.IsNullOrWhiteSpace price |> not
+    let create dateTime price quantity pair =
+        { Id = Guid.NewGuid()
+          DateTime = dateTime
+          Price = price
+          Quantity = quantity
+          Pair = pair }
 
 module Todo =
     let isValid (description: string) =
