@@ -12,6 +12,7 @@ type Msg =
     | AddTodo
     | AddedTodo of Todo
 
+
 let todosApi =
     Remoting.createApi ()
     |> Remoting.withRouteBuilder Route.builder
@@ -24,6 +25,15 @@ let init () : Model * Cmd<Msg> =
         Cmd.OfAsync.perform todosApi.getTodos () GotTodos
 
     model, cmd
+
+let apiInfo = promise {
+    let! blottersInfo = Fetch.fetchAs<Blotters Info> "api/blotter" (Decode.Auto.generateDecoder()) []
+    // do more with customers here...
+
+    return
+        { blottersInfo = infoBlottersInfo }
+}
+
 
 let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
     match msg with
@@ -123,3 +133,9 @@ let view (model: Model) (dispatch: Msg -> unit) =
             ]
         ]
     ]
+
+// promise {
+//     let! blottersInfo = Fetch.fetchAs<Blotters Info> "api/blotter" (Decode.Auto.generateDecoder()) []
+//     // do more with customers here...
+// }
+

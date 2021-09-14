@@ -4,12 +4,14 @@ open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 open Saturn
 open Giraffe
+open FSharp.Control.Tasks
 
 open Shared
 
 type Storage() =
     let todos = ResizeArray<_>()
     let blotters = ResizeArray<_>()
+    let markets = ResizeArray<_>()
 
     member __.GetTodos() = List.ofSeq todos
 
@@ -23,6 +25,12 @@ type Storage() =
     member __.AddBlotter(data : Blotter) =
         blotters.Add data
         Ok()
+
+    member __.AddMarket(dataMarket : Market) =
+        markets.Add dataMarket
+        Ok()
+
+
 
 let storage = Storage()
 
@@ -69,6 +77,34 @@ let loadBlottersInfo() =
         Quantity = 1500;
         Pair = "GBP/USD" } ]
 
-let myApis = router {
-    get "/api/blotter/" (json (loadBlottersInfo()))
+let loadMarketsInfo() =
+    [ { Id = System.Guid();
+        Provider = "CBOE";
+        Pair = "GBP/USD";
+        Price = 1.554;
+        Time = System.DateTime() } ]
+
+
+/// Loads a customer from the DB and returns as a Customer in json.
+let loadBlotter (blotter:obj) next ctx = task {
+    let blotterInfo = loadBlottersInfo()
+    return! json blotterInfo next ctx
+}
+
+let loadMarket (market:obj) next ctx = task {
+    let marketInfo = loadMarketsInfo()
+    return! json marketInfo next ctx
+}
+// Example
+let loadCustomersFromDb() =
+    [ { Id = 1; Name = "Joe Bloggs" } ]
+
+/// Returns the results of loadCustomersFromDb as JSON.
+let getCustomers next ctx =
+    json (loadCustomersFromDb()) next ctx
+
+let webApi = router {
+    get "/api/blotter" (loadBlotter()) // Add this
+    get "/api/markets/" (loadMarket())
+    get "/api/customers/" getCustomers
 }
