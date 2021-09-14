@@ -3,6 +3,7 @@ module Server
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 open Saturn
+open Giraffe
 
 open Shared
 
@@ -68,5 +69,6 @@ let loadBlottersInfo() =
         Quantity = 1500;
         Pair = "GBP/USD" } ]
 
-
-
+let myApis = router {
+    get "/api/blotter/" (json (loadBlottersInfo()))
+}
